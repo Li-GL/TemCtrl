@@ -5,6 +5,8 @@ import time
 import crcmod
 import binascii
 import datetime
+from msvcrt import getch
+import thread
 
 
 global ReadTem
@@ -71,16 +73,20 @@ def setTem():
     checksum = checkSum_hex[2:4] +checkSum_hex[0:2]     ## MSB和LSB调回来
 
     temperature_cmd = temperature_final+checksum
-    ser = serial.Serial(port=COM, baudrate=9600, timeout=0.2, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS)
+    # ser = serial.Serial(port=COM, baudrate=9600, timeout=0.2, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS)
     ser.write(binascii.a2b_hex(temperature_cmd))
-    ser.close()
+    # ser.close()
+
+
 
 ########### Read the Temperature ##############
 def readTem(interval):
-    ser = serial.Serial(port=COM, baudrate=9600, timeout=0.2, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE,
-                        bytesize=serial.EIGHTBITS)
-    while True:
+    global ser
 
+    while True:
+        ser = serial.Serial(port=COM, baudrate=9600, timeout=0.2, parity=serial.PARITY_NONE,
+                            stopbits=serial.STOPBITS_ONE,
+                            bytesize=serial.EIGHTBITS)
         ser.write('\x01\x04\x00\x00\x00\x01\x31\xca')
         s = ser.read(7)
         rx = s.encode("hex")
@@ -94,34 +100,42 @@ def readTem(interval):
         f = open('temperature.txt', 'a')
         f.write(current_time + '\t')
         f.write(str(ReadTem) + '\n')
-
-
         #################################
 
         print current_time +'\t' + str(ReadTem) + ' '+ u'\u2103'
         time.sleep(interval)
 
+        ser.close()
 
+def keypress():
+
+    while True:
+
+        key = ord(getch())
+
+        if key == 27:  #ESC
+            break
+        elif key == 13  # Enter
+            print 'Wanna set temperature? Y/N: '
+            input_cmd1 = raw_input()
+            if input_cmd1 == 'N' or input_cmd1 == 'n':
+                pass
+            elif input_cmd1 == 'Y' or input_cmd1 == 'y':
+                setTem()
+            time.sleep(2)
 
 ######### Main function ################################
 #///////////////////// All the input////////////////////////////////////////////////////////////
-interval = 2  #reading temperature every 'interval' seconds
 
+interval = 2  #reading temperature every 'interval' seconds
 
 #/////////////////////////////////////////////////////////////////////////////////////////////
 
 COM=getComPort()
+thread.start_new_thread(keypress, ())
+readTem(interval)
 
 
-if len(COM)>0:
 
-    print 'Wanna set temperature? Y/N: '
-    input_cmd= raw_input()
 
-    if input_cmd=='N'or input_cmd=='n':
-        readTem(interval)
-        writeFile()
 
-    elif input_cmd=='Y'or input_cmd=='y':
-        setTem()
-        readTem(interval)
