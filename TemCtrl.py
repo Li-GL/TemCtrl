@@ -115,7 +115,7 @@ def keypress():
 
         if key == 27:  #ESC
             break
-        elif key == 13  # Enter
+        elif key == 13:  # Enter
             print 'Wanna set temperature? Y/N: '
             input_cmd1 = raw_input()
             if input_cmd1 == 'N' or input_cmd1 == 'n':
@@ -132,7 +132,7 @@ interval = 2  #reading temperature every 'interval' seconds
 #/////////////////////////////////////////////////////////////////////////////////////////////
 
 COM=getComPort()
-thread.start_new_thread(keypress, ())
+thread.start_new_thread(keypress, ())   #creat a new thread
 readTem(interval)
 
 
