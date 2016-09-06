@@ -98,7 +98,7 @@ def readTem(interval):
         ########## Write ReadTem to file
         current_time  = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         current_time_filename = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
-        filename = 'Temperature' + '_'+ current_time_filename
+        filename = 'Temperature' + '_'+ current_time_filename +'.txt'
         f = open(filename, 'a')
         f.write(current_time + '\t')
         f.write(str(ReadTem) + '\n')
