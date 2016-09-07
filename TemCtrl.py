@@ -7,6 +7,8 @@ import binascii
 import datetime
 from msvcrt import getch
 import thread
+import os
+import csv
 
 
 global ReadTem
@@ -98,10 +100,22 @@ def readTem(interval):
         ########## Write ReadTem to file
         current_time  = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H:%M:%S')
         current_time_filename = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d')
-        filename = 'Temperature' + '_'+ current_time_filename +'.txt'
-        f = open(filename, 'a')
-        f.write(current_time + '\t')
-        f.write(str(ReadTem) + '\n')
+        filename_1 = 'Temperature' + '_'+ current_time_filename +'.csv'
+
+        #####creat folder "temperatureData" in current path
+        current_path = os.getcwd()
+        save_path = os.path.join(current_path, 'temperatureData')
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        filename = os.path.join(save_path,filename_1)
+
+        ####  write data to csv file
+        csvfile = open(filename, 'a')
+        fieldnames = ['date', 'temperature']
+        writer = csv.DictWriter(csvfile, delimiter=',', lineterminator='\n', fieldnames=fieldnames)
+        writer.writerow({'date': current_time, 'temperature': str(ReadTem)})
+
         #################################
 
         print current_time +'\t' + str(ReadTem) + ' '+ u'\u2103'
