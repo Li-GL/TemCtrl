@@ -7,11 +7,11 @@ I. Main function
 
 2. read the temperature
 
-3. write data to txt file
+3. write data to csv file in "temperatureData" folder of current path
 
 
-II. To compile using Pyinstaller 3.1
+II. To compile using Pyinstaller 3.1 (Pyinstaller 3.2 won't work, seems bug there)
 
-UPX compressed, custom icon:
+  command for UPX compressed, custom icon as below:
 
-pyinstaller --upx-dir=C:\Python27\UPX -F -i test.ico TemCtrl.py
+  pyinstaller --upx-dir=C:\Python27\UPX -F -i test.ico TemCtrl.py
