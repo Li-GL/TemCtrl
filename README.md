@@ -3,11 +3,13 @@ To set and read temperature from temperature-control device via serial communica
 
 I. Main function
 
-1. set the temperature
+1. set the temperature whenever press ENTER
 
 2. read the temperature
 
 3. write data to csv file in "temperatureData" folder of current path
+
+4. To exit, press ESC, then Ctrl + C
 
 
 II. To compile using Pyinstaller 3.1 (Pyinstaller 3.2 won't work, seems bug there)
